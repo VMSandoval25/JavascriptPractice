@@ -71,14 +71,14 @@ function checkWin(player){ // checks if a player has won
 
     if(isGameOver){
         playerScores[player] = playerScores[player] + 1;
-        console.log(playerScores);
+        console.log("This is the score", playerScores);
         gameWinnerAnnoucement(player);
     }
 
 }
 
 function gameWinnerAnnoucement(player){ // annouce which player won and update the score on the screen
-    console.log("print to web page who won");
+    console.log("print to web page who won and print the new score");
 }
 
 function resetGame(event){
