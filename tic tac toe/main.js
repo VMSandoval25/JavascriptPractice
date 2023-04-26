@@ -11,11 +11,17 @@ const winCondition = [-1, -1, -1];
 let playerScores= [0,0]; // this keeps track of how many games have been won
 let playerMoves = [0, 0];
 
+
+let possibleMoves = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 let isGameOver = false; 
 
 let isGameStarted = false;
 
 let isClicked = false;
+
+let isBot = false;
+
+
 
 
 function getBox(className){ // gets what box was clicked on and prints either X or O in the box
@@ -30,8 +36,31 @@ function getBox(className){ // gets what box was clicked on and prints either X 
             playerMoves[count%2] = playerMoves[count%2] + 1;
             updateGame(count%2, className);
         }
-        
     }
+
+    setTimeout(function(){
+
+    if(isBot && !isGameOver){
+        let isUnique = false;
+        while(!isUnique){
+            let bot_element = Math.floor(Math.random() * 9);
+            let bot_changeElement = document.getElementsByClassName(possibleMoves[bot_element])[0].getElementsByClassName('xo')[0];
+            if(bot_changeElement.innerHTML == ""){
+
+                isUnique = true;
+                isClicked = true;
+                bot_changeElement.innerHTML += PLAYERS[count % 2];
+                playerMoves[count%2] = playerMoves[count%2] + 1;
+                console.log("Bots: ", player2Condition, " count: ", count%2);
+                console.log("p1: ", player1Condition);
+
+                updateGame(count%2, possibleMoves[bot_element]);
+            }
+        }  
+    }
+
+    }, 1000)
+    
     
 }
 
@@ -82,7 +111,7 @@ function checkWin(player){ // checks if a player has won
         console.log("This is the score", playerScores);
         gameWinnerAnnoucement(player);
     }
-    else if(playerMoves[0] + playerMoves[1] == 8){
+    else if(playerMoves[0] + playerMoves[1] == 9){
         isGameOver=true;
         gameTieAnnoucement();
     }
@@ -119,6 +148,7 @@ function newGame(event){
         elements[i].innerHTML = "";
     }
     count = 0;
+    playerMoves = [0,0];
     player1Condition = winConditions.map((item) => item.slice());
     player2Condition = winConditions.map((item) => item.slice());
     isGameOver = false;
@@ -132,8 +162,6 @@ function initialGame(){
     console.log( new Date());
     gameTimer();
     playerTimer();
-    //isGameStarted = true;
-    //playerTimer();
 }
 
 function printPlayerScores(){
@@ -171,7 +199,7 @@ function playerTimer(){
         let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         let seconds = Math.floor((distance % (1000 * 60)) / 1000);
         document.getElementById("pTimer").innerHTML =  "Player Timer: "+minutes + "m " + seconds + "s ";
-        console.log("Player timer: "+ distance);
+        //console.log("Player timer: "+ distance);
         if (distance < 0 ) {
                 if(count == 0) count = 1;
                 else count--;
@@ -192,5 +220,16 @@ function playerTimer(){
     
 }
 
-initialGame();
+
+
+function oneplayer(event){
+    isBot=true;
+    initialGame();
+}
+
+function twoplayers(event){
+    //isBot=true;
+    isBot = false;
+    initialGame();
+}
 

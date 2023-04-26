@@ -28,8 +28,13 @@ h3{
   font-size: 1.5em;
 }
 
+#div_columns{
+  display: flex;
+
+}
+
 /* Button: NewGame and Reset */
-.new_game, .reset {
+.new_game, .reset, .one_player, .two_players {
   text-align:center;
   background-color: #ff8c00;
   color: #000000;
