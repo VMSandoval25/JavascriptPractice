@@ -10,6 +10,17 @@ h1 {
   font-size: 4em;
 }
 
+h2{
+  margin: 16px auto;
+  text-align: center;
+  font-size: 2.5em;
+}
+
+h3{
+  margin: 16px auto;
+  text-align: center;
+  font-size: 2em;
+}
 .whose_turn {
   margin: 10px auto;
   margin-bottom: 20px;

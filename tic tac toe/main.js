@@ -9,20 +9,28 @@ let player1Condition = winConditions.map((item) => item.slice());
 let player2Condition = winConditions.map((item) => item.slice());
 const winCondition = [-1, -1, -1];
 let playerScores= [0,0]; // this keeps track of how many games have been won
+let playerMoves = [0, 0];
 
 let isGameOver = false; 
+
+let isGameStarted = false;
+
+let isClicked = false;
 
 
 function getBox(className){ // gets what box was clicked on and prints either X or O in the box
     if(!isGameOver)
     {
+        isGameStarted = true;
         console.log(isGameOver);
         let changeElement = document.getElementsByClassName(className)[0].getElementsByClassName('xo')[0];
         if(changeElement.innerHTML == ""){
+            isClicked = true;
             changeElement.innerHTML += PLAYERS[count % 2];
+            playerMoves[count%2] = playerMoves[count%2] + 1;
             updateGame(count%2, className);
-            count++;
         }
+        
     }
     
 }
@@ -74,16 +82,34 @@ function checkWin(player){ // checks if a player has won
         console.log("This is the score", playerScores);
         gameWinnerAnnoucement(player);
     }
+    else if(playerMoves[0] + playerMoves[1] == 8){
+        isGameOver=true;
+        gameTieAnnoucement();
+    }
+    else{
+        count++;
+        document.querySelector(".display_player").innerHTML = PLAYERS[count%2];
+    }
 
+}
+
+function gameTieAnnoucement(){
+    console.log("No one has won")
+    document.querySelector(".result").innerHTML =  `It is a tie! Score stays the same!`;
 }
 
 function gameWinnerAnnoucement(player){ // annouce which player won and update the score on the screen
     console.log("print to web page who won and print the new score");
+    document.querySelector(".result").innerHTML =  `Player ${PLAYERS[player]} has won!`;
+    document.querySelector("#XScore").innerHTML = `X Score: ${playerScores[0]}`;
+    document.querySelector("#OScore").innerHTML = `O Score: ${playerScores[1]}`;
 }
 
 function resetGame(event){
     newGame();
-    playerScores = [0, 0] // score is reset
+    playerScores = [0, 0]; // score is reset
+    document.querySelector("#XScore").innerHTML = `X Score: ${playerScores[0]}`;
+    document.querySelector("#OScore").innerHTML = `O Score: ${playerScores[1]}`;
     
 }
 
@@ -96,6 +122,75 @@ function newGame(event){
     player1Condition = winConditions.map((item) => item.slice());
     player2Condition = winConditions.map((item) => item.slice());
     isGameOver = false;
+    initialGame();
+
 }
 
+function initialGame(){
+    document.querySelector(".display_player").innerHTML = PLAYERS[count%2];
+    printPlayerScores();
+    console.log( new Date());
+    gameTimer();
+    playerTimer();
+    //isGameStarted = true;
+    //playerTimer();
+}
+
+function printPlayerScores(){
+    document.querySelector("#XScore").innerHTML = `X Score: ${playerScores[0]}`;
+    document.querySelector("#OScore").innerHTML = `O Score: ${playerScores[1]}`;
+}
+
+function gameTimer(){
+    let countDown = new Date().getTime() + 602000; // 10 minutes
+    // Update the count down every 1 second
+    let x = setInterval(function() {
+        let now = new Date().getTime();
+        let distance = countDown - now;
+        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        document.getElementById("gTimer").innerHTML =  "Game Timer: "+minutes + "m " + seconds + "s ";
+        if (distance < 0) {
+            clearInterval(x);
+            isGameOver=true;
+            document.getElementById("gTimer").innerHTML = "Time is Up!";
+            gameTieAnnoucement();
+        }
+        else if(isGameOver){
+            clearInterval(x);
+        }
+    }, 1000);
+}
+
+function playerTimer(){
+    var playerCountDown = new Date().getTime() + 12000; // ten seconds
+
+    let x = setInterval(function() {
+        let now = new Date().getTime();
+        let distance = playerCountDown - now;
+        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        document.getElementById("pTimer").innerHTML =  "Player Timer: "+minutes + "m " + seconds + "s ";
+        console.log("Player timer: "+ distance);
+        if (distance < 0 ) {
+                if(count == 0) count = 1;
+                else count--;
+                document.querySelector(".display_player").innerHTML = PLAYERS[count%2];
+                playerCountDown = new Date().getTime() + 12000;
+                //return;
+        }
+        else if(isClicked == true){
+            document.querySelector(".display_player").innerHTML = PLAYERS[count%2];
+            isClicked = false;
+            clearInterval();
+            playerCountDown = new Date().getTime() + 12000;
+        }
+        if(isGameOver){
+            clearInterval(x);
+        }
+    }, 1000);
+    
+}
+
+initialGame();
 
