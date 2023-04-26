@@ -10,6 +10,7 @@ let player2Condition = winConditions.map((item) => item.slice());
 const winCondition = [-1, -1, -1];
 let playerScores= [0,0]; // this keeps track of how many games have been won
 let playerMoves = [0, 0];
+let isMode = false;
 
 
 let possibleMoves = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
@@ -25,7 +26,7 @@ let isBot = false;
 
 
 function getBox(className){ // gets what box was clicked on and prints either X or O in the box
-    if(!isGameOver)
+    if(!isGameOver && isMode)
     {
         isGameStarted = true;
         console.log(isGameOver);
@@ -59,7 +60,7 @@ function getBox(className){ // gets what box was clicked on and prints either X 
         }  
     }
 
-    }, 1000)
+    }, 300)
     
     
 }
@@ -224,12 +225,14 @@ function playerTimer(){
 
 function oneplayer(event){
     isBot=true;
+    isMode = true;
     initialGame();
 }
 
 function twoplayers(event){
     //isBot=true;
     isBot = false;
+    isMode=true;
     initialGame();
 }
 
